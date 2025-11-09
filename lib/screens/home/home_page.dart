@@ -337,6 +337,15 @@ class _MetricChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ★ 「今日」のときだけ専用カードUIに切り替え
+    if (range == DashboardRange.today) {
+      return _TodayMetricChart(
+        metric: metric,
+        conversion: conversionValues.isNotEmpty ? conversionValues.first : 0.0,
+        sales: salesValues.isNotEmpty ? salesValues.first : 0,
+      );
+    }
+
     final scheme = Theme.of(context).colorScheme;
 
     String xLabel;
@@ -360,18 +369,19 @@ class _MetricChart extends StatelessWidget {
 
     if (isConversion) {
       barValues = conversionValues.map((v) => v.clamp(0.0, 1.0)).toList();
-      displayValues = barValues
-          .map((v) => '${(v * 100).toStringAsFixed(0)}%')
-          .toList();
+      displayValues =
+          barValues.map((v) => '${(v * 100).toStringAsFixed(0)}%').toList();
     } else {
       // 売上は最大値に対する比率で高さを決める
-      final maxSale =
-          salesValues.reduce((a, b) => a > b ? a : b).toDouble().clamp(1, double.infinity);
-      barValues =
-          salesValues.map((v) => (v.toDouble() / maxSale).clamp(0.0, 1.0)).toList();
-      displayValues = salesValues
-          .map((v) => '${(v / 10000).toStringAsFixed(1)}万')
+      final maxSale = salesValues
+          .reduce((a, b) => a > b ? a : b)
+          .toDouble()
+          .clamp(1, double.infinity);
+      barValues = salesValues
+          .map((v) => (v.toDouble() / maxSale).clamp(0.0, 1.0))
           .toList();
+      displayValues =
+          salesValues.map((v) => '${(v / 10000).toStringAsFixed(1)}万').toList();
     }
 
     return Column(
@@ -420,6 +430,129 @@ class _MetricChart extends StatelessWidget {
           style: const TextStyle(fontSize: 11, color: Colors.grey),
         ),
       ],
+    );
+  }
+}
+
+class _TodayMetricChart extends StatelessWidget {
+  final DashboardMetric metric;
+  final double conversion; // 0.0〜1.0
+  final int sales; // 円
+
+  const _TodayMetricChart({
+    required this.metric,
+    required this.conversion,
+    required this.sales,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isConversion = metric == DashboardMetric.conversion;
+
+    final double ratio = isConversion
+        ? conversion.clamp(0.0, 1.0)
+        : (sales.toDouble() / 500000).clamp(0.0, 1.0); // 売上は50万を目安に
+
+    final String title = isConversion ? '今日の成約率' : '今日の売上';
+    final String valueText = isConversion
+        ? '${(conversion * 100).toStringAsFixed(1)}%'
+        : '${(sales / 10000).toStringAsFixed(1)}万円';
+    final String subText = isConversion
+        ? '目標：70% をイメージ'
+        : '目標：50万円をイメージ（ダミー）';
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                valueText,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                subText,
+                style: const TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // 横のプログレスバー
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final barWidth = constraints.maxWidth;
+              return Stack(
+                children: [
+                  Container(
+                    width: barWidth,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: scheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: barWidth * ratio,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: scheme.primary,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                  if (isConversion)
+                    // 目標70%の位置に細いラインを表示（なんとなくの指標）
+                    Positioned(
+                      left: barWidth * 0.7,
+                      child: Container(
+                        width: 2,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: scheme.error.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(1),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: 4),
+          Text(
+            isConversion
+                ? '赤線が目標成約率70%の目安です。'
+                : '棒の長さは目安（50万円）に対する達成度です。',
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+          ),
+        ],
+      ),
     );
   }
 }
