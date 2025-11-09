@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'screens/home/home_page.dart';
 import 'screens/patients/patients_page.dart';
 import 'screens/scan/scan_home_page.dart';
+import 'screens/appointments/add_appointment_page.dart';
+import 'screens/patients/add_patient_page.dart';
 
 void main() {
   runApp(const CounselorApp());
@@ -40,12 +42,16 @@ class _RootTabPageState extends State<RootTabPage> {
     HomePage(),
     PatientsPage(),
     ScanHomePage(),
+    AddAppointmentPage(), // ★ 予約追加タブ
+    AddPatientPage(),     // ★ 患者追加タブ
   ];
 
   final _titles = const [
     'ホーム',
     '患者一覧',
     '顔スキャン',
+    '予約追加',
+    '患者追加',
   ];
 
   @override
@@ -78,6 +84,16 @@ class _RootTabPageState extends State<RootTabPage> {
             icon: Icon(Icons.camera_alt_outlined),
             selectedIcon: Icon(Icons.camera_alt),
             label: 'スキャン',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.event_available_outlined),
+            selectedIcon: Icon(Icons.event_available),
+            label: '予約追加',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_add_alt_outlined),
+            selectedIcon: Icon(Icons.person_add_alt_1),
+            label: '患者追加',
           ),
         ],
       ),
