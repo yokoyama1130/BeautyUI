@@ -93,7 +93,6 @@ class PatientDetailPage extends StatelessWidget {
                     width: double.infinity,
                     child: FilledButton.icon(
                       onPressed: () {
-                        // TODO: Go API につないで保存
                       },
                       icon: const Icon(Icons.save_outlined),
                       label: const Text('メモを保存（ダミー）'),
@@ -136,7 +135,7 @@ class PatientDetailPage extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   blurRadius: 8,
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   offset: const Offset(0, -2),
                 ),
               ],
@@ -146,7 +145,6 @@ class PatientDetailPage extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      // TODO: 予約登録フローへ
                     },
                     icon: const Icon(Icons.event_note_outlined),
                     label: const Text('次回予約メモ'),
@@ -156,7 +154,6 @@ class PatientDetailPage extends StatelessWidget {
                 Expanded(
                   child: FilledButton.icon(
                     onPressed: () {
-                      // TODO: 料金シミュレーション画面へ遷移
                     },
                     icon: const Icon(Icons.calculate_outlined),
                     label: const Text('プランを提案'),
@@ -188,14 +185,14 @@ class _ProfileHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: scheme.primaryContainer.withOpacity(0.9),
+        color: scheme.primaryContainer.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 26,
-            backgroundColor: scheme.onPrimaryContainer.withOpacity(0.1),
+            backgroundColor: scheme.onPrimaryContainer.withValues(alpha: 0.1),
             child: Text(
               name.substring(0, 1),
               style: TextStyle(
@@ -223,7 +220,7 @@ class _ProfileHeader extends StatelessWidget {
                   tag,
                   style: TextStyle(
                     fontSize: 12,
-                    color: scheme.onPrimaryContainer.withOpacity(0.9),
+                    color: scheme.onPrimaryContainer.withValues(alpha: 0.9),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -231,7 +228,7 @@ class _ProfileHeader extends StatelessWidget {
                   '最終来院：$lastVisit',
                   style: TextStyle(
                     fontSize: 11,
-                    color: scheme.onPrimaryContainer.withOpacity(0.8),
+                    color: scheme.onPrimaryContainer.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -300,7 +297,6 @@ class _VisitTile extends StatelessWidget {
   final String note;
 
   const _VisitTile({
-    super.key,
     required this.date,
     required this.title,
     required this.note,

@@ -24,7 +24,7 @@ class ScanHomePage extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.06),
+                      color: Colors.black.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
@@ -36,7 +36,7 @@ class ScanHomePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: scheme.primary.withOpacity(0.9),
+                            color: scheme.primary.withValues(alpha: 0.9),
                             width: 2,
                           ),
                         ),
@@ -81,7 +81,6 @@ class ScanHomePage extends StatelessWidget {
                     Expanded(
                       child: FilledButton.icon(
                         onPressed: () {
-                          // TODO: ライブカメラ起動
                         },
                         icon: const Icon(Icons.camera_alt),
                         label: const Text('ライブ撮影'),
@@ -91,7 +90,6 @@ class ScanHomePage extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          // TODO: ギャラリーから読み込み
                         },
                         icon: const Icon(Icons.photo_library_outlined),
                         label: const Text('アルバムから'),
@@ -104,7 +102,6 @@ class ScanHomePage extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      // TODO: カウンセリング開始フローへ
                     },
                     icon: const Icon(Icons.chat_bubble_outline),
                     label: const Text('カウンセリングを開始'),
