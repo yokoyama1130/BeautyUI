@@ -7,6 +7,11 @@ enum DashboardRange {
   month,
 }
 
+enum DashboardMetric {
+  conversion,
+  sales,
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -16,12 +21,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DashboardRange _range = DashboardRange.today;
+  DashboardMetric _metric = DashboardMetric.conversion;
 
-  // ダミーデータ：成約率・件数（0〜1スケール）
+  // ダミーデータ：成約率（0〜1スケール）
   final Map<DashboardRange, List<double>> _conversionRateData = {
     DashboardRange.today: [0.62],
     DashboardRange.week: [0.4, 0.55, 0.7, 0.6, 0.65, 0.5, 0.58],
     DashboardRange.month: [0.45, 0.52, 0.6, 0.55],
+  };
+
+  // ダミーデータ：売上（円）
+  final Map<DashboardRange, List<int>> _salesData = {
+    DashboardRange.today: [350000], // 35万くらい
+    DashboardRange.week: [
+      300000,
+      420000,
+      500000,
+      380000,
+      600000,
+      250000,
+      450000,
+    ],
+    DashboardRange.month: [
+      2200000,
+      2500000,
+      2000000,
+      2800000,
+    ],
   };
 
   final Map<DashboardRange, List<int>> _bookingCountData = {
@@ -30,21 +56,12 @@ class _HomePageState extends State<HomePage> {
     DashboardRange.month: [30, 34, 28, 40],
   };
 
-  String _rangeLabel(DashboardRange range) {
-    switch (range) {
-      case DashboardRange.today:
-        return '今日';
-      case DashboardRange.week:
-        return '1週間';
-      case DashboardRange.month:
-        return '1ヶ月';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final conversion = _conversionRateData[_range]!;
     final booking = _bookingCountData[_range]!;
+    final sales = _salesData[_range]!;
+
     final avgConversion =
         (conversion.reduce((a, b) => a + b) / conversion.length) * 100;
     final totalBooking = booking.reduce((a, b) => a + b);
@@ -81,15 +98,34 @@ class _HomePageState extends State<HomePage> {
 
           const SizedBox(height: 24),
 
-          // 成約率の推移（簡易棒グラフ）
-          const Text(
-            '成約率の推移',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          // グラフタイトル + メトリック切り替え
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _metric == DashboardMetric.conversion
+                    ? '成約率の推移'
+                    : '売上の推移',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              _MetricToggle(
+                value: _metric,
+                onChanged: (m) {
+                  setState(() {
+                    _metric = m;
+                  });
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 8),
-          _ConversionChart(
+
+          _MetricChart(
             range: _range,
-            values: conversion,
+            metric: _metric,
+            conversionValues: conversion,
+            salesValues: sales,
           ),
 
           const SizedBox(height: 24),
@@ -99,21 +135,21 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _AppointmentCard(
+          const _AppointmentCard(
             time: '10:00',
             name: '山田 花子',
             menu: '二重整形 初回カウンセリング',
             tag: '初回 / 二重',
             lastVisit: '2025-11-09',
           ),
-          _AppointmentCard(
+          const _AppointmentCard(
             time: '13:30',
             name: '佐藤 太郎',
             menu: '鼻整形 手術前カウンセリング',
             tag: '手術前 / 鼻',
             lastVisit: '2025-11-09',
           ),
-          _AppointmentCard(
+          const _AppointmentCard(
             time: '16:00',
             name: '田中 みなみ',
             menu: '輪郭(エラ) 2回目カウンセリング',
@@ -163,6 +199,35 @@ class _RangeChips extends StatelessWidget {
       case DashboardRange.month:
         return '1ヶ月';
     }
+  }
+}
+
+class _MetricToggle extends StatelessWidget {
+  final DashboardMetric value;
+  final ValueChanged<DashboardMetric> onChanged;
+
+  const _MetricToggle({
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 4,
+      children: [
+        ChoiceChip(
+          label: const Text('成約率', style: TextStyle(fontSize: 11)),
+          selected: value == DashboardMetric.conversion,
+          onSelected: (_) => onChanged(DashboardMetric.conversion),
+        ),
+        ChoiceChip(
+          label: const Text('売上', style: TextStyle(fontSize: 11)),
+          selected: value == DashboardMetric.sales,
+          onSelected: (_) => onChanged(DashboardMetric.sales),
+        ),
+      ],
+    );
   }
 }
 
@@ -257,13 +322,17 @@ class _KpiCard extends StatelessWidget {
   }
 }
 
-class _ConversionChart extends StatelessWidget {
+class _MetricChart extends StatelessWidget {
   final DashboardRange range;
-  final List<double> values; // 0.0〜1.0
+  final DashboardMetric metric;
+  final List<double> conversionValues; // 0.0〜1.0
+  final List<int> salesValues; // 円
 
-  const _ConversionChart({
+  const _MetricChart({
     required this.range,
-    required this.values,
+    required this.metric,
+    required this.conversionValues,
+    required this.salesValues,
   });
 
   @override
@@ -283,6 +352,28 @@ class _ConversionChart extends StatelessWidget {
         break;
     }
 
+    final bool isConversion = metric == DashboardMetric.conversion;
+
+    // 棒の高さ計算用
+    List<double> barValues;
+    List<String> displayValues;
+
+    if (isConversion) {
+      barValues = conversionValues.map((v) => v.clamp(0.0, 1.0)).toList();
+      displayValues = barValues
+          .map((v) => '${(v * 100).toStringAsFixed(0)}%')
+          .toList();
+    } else {
+      // 売上は最大値に対する比率で高さを決める
+      final maxSale =
+          salesValues.reduce((a, b) => a > b ? a : b).toDouble().clamp(1, double.infinity);
+      barValues =
+          salesValues.map((v) => (v.toDouble() / maxSale).clamp(0.0, 1.0)).toList();
+      displayValues = salesValues
+          .map((v) => '${(v / 10000).toStringAsFixed(1)}万')
+          .toList();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -290,9 +381,10 @@ class _ConversionChart extends StatelessWidget {
           height: 120,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: List.generate(values.length, (index) {
-              final v = values[index].clamp(0.0, 1.0);
+            children: List.generate(barValues.length, (index) {
+              final v = barValues[index];
               final barHeight = 20 + (v * 80); // 20〜100px
+
               return Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -300,7 +392,7 @@ class _ConversionChart extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        '${(v * 100).toStringAsFixed(0)}%',
+                        displayValues[index],
                         style: const TextStyle(
                           fontSize: 10,
                         ),
@@ -322,7 +414,9 @@ class _ConversionChart extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '※ $xLabelごとのダミー成約率（後でAPI連携予定）',
+          isConversion
+              ? '※ $xLabelごとのダミー成約率（後でAPI連携予定）'
+              : '※ $xLabelごとのダミー売上（後でAPI連携予定）',
           style: const TextStyle(fontSize: 11, color: Colors.grey),
         ),
       ],
@@ -363,7 +457,6 @@ class _AppointmentCard extends StatelessWidget {
         subtitle: Text(menu),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
-          // ホームからも患者詳細へ飛べるように
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => PatientDetailPage(
