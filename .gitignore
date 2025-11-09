@@ -1,0 +1,28 @@
+# OS / エディタ
+.DS_Store
+.vscode/
+.idea/
+
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub/
+build/
+
+# iOS / macOS / CocoaPods
+ios/Flutter/
+ios/Pods/
+macos/Flutter/
+macos/Pods/
+
+# Android
+android/.gradle/
+android/local.properties
+android/**/GeneratedPluginRegistrant.java
+
+# テスト・カバレッジ
+coverage/
+
+# 念のため（さっき大量に出てたやつ）
+.bash_sessions/
+.cocoapods/
