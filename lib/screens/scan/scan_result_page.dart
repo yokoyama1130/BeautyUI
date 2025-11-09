@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'treatment_simulation_page.dart';
 
 /// 顔スキャンの結果を表示するページ
 /// （現時点ではUIモック。後でPython/Go APIに接続予定）
@@ -54,19 +55,19 @@ class ScanResultPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            _AnalysisCard(
+            const _AnalysisCard(
               icon: Icons.face_retouching_natural,
               label: '肌質',
               result: '水分量：やや低め（38%）\n毛穴の開き：軽度\nしみ：小〜中程度',
               suggestion: '保湿ケアと美白成分（ビタミンC誘導体）を推奨',
             ),
-            _AnalysisCard(
+            const _AnalysisCard(
               icon: Icons.remove_red_eye_outlined,
               label: '目元',
               result: '左右差：小\nまぶた：厚め\nクマ：わずかにあり',
               suggestion: '埋没法 + ヒアルロン酸注入が適応範囲',
             ),
-            _AnalysisCard(
+            const _AnalysisCard(
               icon: Icons.camera_front_outlined,
               label: '鼻・輪郭',
               result: '鼻背：わずかに低め\n顎：バランス良好',
@@ -91,8 +92,9 @@ class ScanResultPage extends StatelessWidget {
                 style: TextStyle(fontSize: 13),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
 
+            // --- アクションボタン群 ---
             Row(
               children: [
                 Expanded(
@@ -131,6 +133,25 @@ class ScanResultPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // ★ 施術シミュレーション開始ボタン
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => TreatmentSimulationPage(
+                        imagePath: imagePath,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.auto_fix_high_outlined),
+                label: const Text('施術シミュレーションを開始'),
               ),
             ),
           ],
@@ -188,7 +209,9 @@ class _AnalysisCard extends StatelessWidget {
                 Text(
                   '💡 $suggestion',
                   style: TextStyle(
-                      fontSize: 12, color: scheme.primary.withValues(alpha: 0.9)),
+                    fontSize: 12,
+                    color: scheme.primary.withValues(alpha: 0.9),
+                  ),
                 ),
               ],
             ),
