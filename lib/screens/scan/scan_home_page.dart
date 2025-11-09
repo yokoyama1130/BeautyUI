@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'scan_result_page.dart';
 
 /// 美容外科カウンセラー向け「顔スキャン」ホームUI
 /// - 上部：顔プレビュー枠（ダミー）
@@ -81,6 +82,7 @@ class ScanHomePage extends StatelessWidget {
                     Expanded(
                       child: FilledButton.icon(
                         onPressed: () {
+                          // TODO: 将来カメラ起動を実装
                         },
                         icon: const Icon(Icons.camera_alt),
                         label: const Text('ライブ撮影'),
@@ -90,6 +92,7 @@ class ScanHomePage extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
+                          // TODO: 将来ギャラリーから読み込みを実装
                         },
                         icon: const Icon(Icons.photo_library_outlined),
                         label: const Text('アルバムから'),
@@ -102,6 +105,12 @@ class ScanHomePage extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
+                      // ★ スキャン結果画面へ遷移（現状はダミー遷移）
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ScanResultPage(),
+                        ),
+                      );
                     },
                     icon: const Icon(Icons.chat_bubble_outline),
                     label: const Text('カウンセリングを開始'),
