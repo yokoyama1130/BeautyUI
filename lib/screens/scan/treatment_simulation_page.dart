@@ -38,6 +38,13 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage> {
       note: 'しっかりとした二重を長期的に維持したい方に向いています。',
     ),
     _TreatmentOption(
+      name: '目頭切開',
+      tag: 'ダウンタイム：5〜7日 / 費用：中〜高',
+      effect:
+          '・目と目の間の距離を調整し、目頭側の丸みを整える\n・目の横幅だけでなく、目力の印象をアップ',
+      note: '「離れ目が気になる」「もう少し目を大きく見せたい」方に向いています。',
+    ),
+    _TreatmentOption(
       name: '鼻ヒアルロン酸注入',
       tag: 'ダウンタイム：1〜3日 / 費用：低〜中',
       effect:
@@ -45,11 +52,32 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage> {
       note: 'まずはプチ整形で変化を試したい方に向いています。',
     ),
     _TreatmentOption(
+      name: 'ほうれい線ヒアルロン酸',
+      tag: 'ダウンタイム：1〜3日 / 費用：中',
+      effect:
+          '・ほうれい線の溝をふっくらさせ、影をやわらげる\n・疲れて見える・老けて見える印象を軽減',
+      note: 'マスクを外したときの印象を若々しく整えたい方に適しています。',
+    ),
+    _TreatmentOption(
       name: '糸リフト（フェイスライン）',
       tag: 'ダウンタイム：2〜5日 / 費用：中〜高',
       effect:
           '・フェイスラインのたるみを引き上げ、輪郭をシャープに\n・口元やほうれい線の影を軽減',
       note: '「なんとなく疲れて見える」印象を改善したい方に適しています。',
+    ),
+    _TreatmentOption(
+      name: 'エラボトックス（小顔）',
+      tag: 'ダウンタイム：ほぼなし / 費用：低〜中',
+      effect:
+          '・エラ部分の筋肉（咬筋）のボリュームを少しずつ軽減\n・横顔・正面の輪郭をほっそりと見せる',
+      note: 'メスを使わずにフェイスラインをすっきりさせたい方に向いています。',
+    ),
+    _TreatmentOption(
+      name: '顎下脂肪吸引',
+      tag: 'ダウンタイム：7〜10日 / 費用：高',
+      effect:
+          '・二重あごのボリュームを減らし、首との境目をはっきりさせる\n・横顔のラインをシャープに整える',
+      note: 'ダイエットをしても顎下だけが残りやすい方に適した施術です。',
     ),
   ];
 
