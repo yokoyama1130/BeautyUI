@@ -8,6 +8,11 @@ class AddPatientPage extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('患者を追加'),
+        centerTitle: true,
+        // leading は指定しなくても、自動で戻る矢印が出る（Navigator.pushで来ている場合）
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -146,6 +151,7 @@ class AddPatientPage extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('ダミー保存：患者情報を登録しました')),
                     );
+                    // 必要ならここで Navigator.pop(context); してもOK
                   },
                   icon: const Icon(Icons.save_outlined),
                   label: const Text('患者情報を保存'),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'patient_detail_page.dart'; // ★ これで詳細画面に飛べる
+import 'patient_detail_page.dart';
+import 'add_patient_page.dart'; // ★ 追加：患者追加画面へ遷移する用
 
 class PatientsPage extends StatelessWidget {
   const PatientsPage({super.key});
@@ -26,6 +27,7 @@ class PatientsPage extends StatelessWidget {
 
     return Column(
       children: [
+        // 検索ボックス
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: TextField(
@@ -39,6 +41,39 @@ class PatientsPage extends StatelessWidget {
             ),
           ),
         ),
+
+        // 見出し + 患者追加ボタン
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '登録済み患者',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              FilledButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const AddPatientPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.person_add_alt_outlined, size: 18),
+                label: const Text(
+                  '患者追加',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // 患者リスト
         Expanded(
           child: ListView.builder(
             itemCount: patients.length,
@@ -101,7 +136,6 @@ class _PatientCard extends StatelessWidget {
         ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
-          // ★ タップで詳細画面へ遷移
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => PatientDetailPage(

@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 
 /// カウンセラー自身のプロフィール＆個人実績ダッシュボード
 /// - 上：プロフィールカード
-/// - 中：今月の実績サマリー（ダミー）
+/// - 中：カウンセラー別実績サマリー（期間切り替え対応）+ 成約率グラフ
 /// - 下：このカウンセラーでダッシュボードを絞り込むスイッチ（今は見た目だけ）
+
+// プロフィール画面用の表示範囲
+enum CounselorRange {
+  today,
+  week,
+  month,
+}
+
 class CounselorProfilePage extends StatefulWidget {
   const CounselorProfilePage({super.key});
 
@@ -13,10 +21,84 @@ class CounselorProfilePage extends StatefulWidget {
 
 class _CounselorProfilePageState extends State<CounselorProfilePage> {
   bool _filterDashboardByThisCounselor = true;
+  CounselorRange _range = CounselorRange.month; // デフォルトは「1ヶ月」
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+
+    // ===== グラフ用ダミーデータ & KPI 用ダミーデータ =====
+    List<double> conversions;
+    List<String> xLabels;
+    String chartTitle;
+
+    String countLabel;
+    String countValue;
+    String rateLabel;
+    String rateValue;
+    String salesLabel;
+    String salesValue;
+    String patientLabel;
+    String patientValue;
+
+    switch (_range) {
+      case CounselorRange.today:
+        // 今日
+        conversions = [0.72]; // 72%
+        xLabels = ['本日'];
+        chartTitle = '今日の成約率（ダミー）';
+
+        countLabel = '今日の成約数';
+        countValue = '5件';
+
+        rateLabel = '今日の成約率';
+        rateValue = '72.0%';
+
+        salesLabel = '今日の売上';
+        salesValue = '120万円';
+
+        patientLabel = '本日の担当患者';
+        patientValue = '7人';
+        break;
+
+      case CounselorRange.week:
+        // 直近1週間
+        conversions = [0.62, 0.7, 0.68, 0.75, 0.65, 0.7, 0.66];
+        xLabels = ['月', '火', '水', '木', '金', '土', '日'];
+        chartTitle = '直近1週間の成約率の推移（ダミー）';
+
+        countLabel = '今週の成約数';
+        countValue = '18件';
+
+        rateLabel = '今週の成約率';
+        rateValue = '69.2%';
+
+        salesLabel = '今週の売上';
+        salesValue = '320万円';
+
+        patientLabel = '今週の担当患者';
+        patientValue = '24人';
+        break;
+
+      case CounselorRange.month:
+        // 今月
+        conversions = [0.6, 0.68, 0.7, 0.72];
+        xLabels = ['1週目', '2週目', '3週目', '4週目'];
+        chartTitle = '今月の成約率の推移（ダミー）';
+
+        countLabel = '今月の成約数';
+        countValue = '32件';
+
+        rateLabel = '今月の成約率';
+        rateValue = '68.5%';
+
+        salesLabel = '今月の売上';
+        salesValue = '870万円';
+
+        patientLabel = '今月の担当患者数';
+        patientValue = '124人';
+        break;
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -46,7 +128,7 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          '横山 たまゆめ',
+                          '土岐',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -60,35 +142,7 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
                             color: scheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: -4,
-                          children: [
-                            Chip(
-                              label: const Text(
-                                '二重・目元が得意',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              backgroundColor: scheme.secondaryContainer,
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                            ),
-                            Chip(
-                              label: const Text(
-                                'カウンセリング歴 5年',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              backgroundColor: scheme.secondaryContainer,
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                            ),
-                          ],
-                        ),
+                        const SizedBox(height: 4),
                       ],
                     ),
                   ),
@@ -109,27 +163,98 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
           ),
           const SizedBox(height: 8),
 
-          _ProfileInfoRow(
+          const _ProfileInfoRow(
             label: 'スタッフID',
             value: 'CNS-001',
           ),
-          _ProfileInfoRow(
+          const _ProfileInfoRow(
             label: '所属院',
             value: '新宿院（美容外科）',
           ),
-          _ProfileInfoRow(
+          const _ProfileInfoRow(
             label: '勤務形態',
             value: '常勤 / シフト制',
           ),
-          _ProfileInfoRow(
+          const _ProfileInfoRow(
             label: 'メール',
             value: 'example@example.com',
           ),
 
           const SizedBox(height: 24),
 
+          // ===== 期間切り替え + 実績サマリー =====
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'カウンセラー別 実績サマリー（ダミー）',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: scheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: _ProfileRangeChips(
+                  value: _range,
+                  onChanged: (r) {
+                    setState(() {
+                      _range = r;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          Row(
+            children: [
+              Expanded(
+                child: _MiniKpiCard(
+                  label: countLabel,
+                  value: countValue,
+                  sub: 'ダミーデータ',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MiniKpiCard(
+                  label: rateLabel,
+                  value: rateValue,
+                  sub: '目標 70%',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _MiniKpiCard(
+                  label: salesLabel,
+                  value: salesValue,
+                  sub: '術式ベースの概算（ダミー）',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MiniKpiCard(
+                  label: patientLabel,
+                  value: patientValue,
+                  sub: 'カウンセリング済み（ダミー）',
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
+          // ===== グラフ =====
           Text(
-            'カウンセラー別 実績サマリー（ダミー）',
+            chartTitle,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -138,44 +263,9 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
           ),
           const SizedBox(height: 8),
 
-          Row(
-            children: const [
-              Expanded(
-                child: _MiniKpiCard(
-                  label: '今月の成約数',
-                  value: '32件',
-                  sub: '先月比 +5件',
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: _MiniKpiCard(
-                  label: '今月の成約率',
-                  value: '68.5%',
-                  sub: '目標 70%',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: const [
-              Expanded(
-                child: _MiniKpiCard(
-                  label: '今月の売上',
-                  value: '870万円',
-                  sub: '術式ベースの概算',
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: _MiniKpiCard(
-                  label: '担当患者数',
-                  value: '124人',
-                  sub: 'カウンセリング済み',
-                ),
-              ),
-            ],
+          _CounselorTrendChart(
+            conversions: conversions,
+            xLabels: xLabels,
           ),
 
           const SizedBox(height: 24),
@@ -324,6 +414,121 @@ class _MiniKpiCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// プロフィール画面用の期間切り替えチップ
+class _ProfileRangeChips extends StatelessWidget {
+  final CounselorRange value;
+  final ValueChanged<CounselorRange> onChanged;
+
+  const _ProfileRangeChips({
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final items = CounselorRange.values;
+    return Wrap(
+      spacing: 4,
+      children: items.map((r) {
+        final selected = r == value;
+        return ChoiceChip(
+          label: Text(
+            _label(r),
+            style: const TextStyle(fontSize: 11),
+          ),
+          selected: selected,
+          onSelected: (_) => onChanged(r),
+        );
+      }).toList(),
+    );
+  }
+
+  String _label(CounselorRange r) {
+    switch (r) {
+      case CounselorRange.today:
+        return '今日';
+      case CounselorRange.week:
+        return '1週間';
+      case CounselorRange.month:
+        return '1ヶ月';
+    }
+  }
+}
+
+/// カウンセラー個人の成約率推移グラフ（ホームのグラフと似たバー表示）
+class _CounselorTrendChart extends StatelessWidget {
+  final List<double> conversions; // 0.0〜1.0
+  final List<String> xLabels; // X軸ラベル（本日 / 曜日 / 週 など）
+
+  const _CounselorTrendChart({
+    required this.conversions,
+    required this.xLabels,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    // 0.0〜1.0 にクランプしてパーセント表示に
+    final values = conversions.map((v) => v.clamp(0.0, 1.0)).toList();
+    final labels =
+        values.map((v) => '${(v * 100).toStringAsFixed(0)}%').toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          // ちょっと高さに余裕を持たせる
+          height: 140,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List.generate(values.length, (index) {
+              final v = values[index];
+              // 棒の最大高さも少し控えめに
+              final barHeight = 20 + (v * 70); // 20〜90px くらい
+
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        labels[index],
+                        style: const TextStyle(
+                          fontSize: 10,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Container(
+                        height: barHeight,
+                        decoration: BoxDecoration(
+                          color: scheme.primary.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        xLabels[index],
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          '※ 成約率は全てダミーデータ。後でGo/PythonのAPIと連携して実データを表示予定。',
+          style: TextStyle(fontSize: 11, color: Colors.grey),
+        ),
+      ],
     );
   }
 }

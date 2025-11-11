@@ -3,7 +3,6 @@ import 'screens/home/home_page.dart';
 import 'screens/patients/patients_page.dart';
 import 'screens/scan/scan_home_page.dart';
 import 'screens/appointments/add_appointment_page.dart';
-import 'screens/patients/add_patient_page.dart';
 import 'screens/profile/counselor_profile_page.dart';
 
 void main() {
@@ -39,13 +38,13 @@ class RootTabPage extends StatefulWidget {
 class _RootTabPageState extends State<RootTabPage> {
   int _currentIndex = 0;
 
+  // ★ 患者追加タブはここから消す
   final _pages = const [
     HomePage(),
     PatientsPage(),
     ScanHomePage(),
     AddAppointmentPage(),
-    AddPatientPage(),
-    CounselorProfilePage(), // ★ プロフィール追加
+    CounselorProfilePage(), // プロフィール
   ];
 
   final _titles = const [
@@ -53,8 +52,7 @@ class _RootTabPageState extends State<RootTabPage> {
     '患者一覧',
     '顔スキャン',
     '予約追加',
-    '患者追加',
-    'プロフィール', // ★ タイトル追加
+    'プロフィール',
   ];
 
   @override
@@ -92,11 +90,6 @@ class _RootTabPageState extends State<RootTabPage> {
             icon: Icon(Icons.event_available_outlined),
             selectedIcon: Icon(Icons.event_available),
             label: '予約追加',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_add_alt_outlined),
-            selectedIcon: Icon(Icons.person_add_alt_1),
-            label: '患者追加',
           ),
           NavigationDestination(
             icon: Icon(Icons.badge_outlined),
