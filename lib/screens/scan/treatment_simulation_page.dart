@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 /// 施術シミュレーション画面
-/// - 上：顔画像（ダミー or 渡された画像）
-/// - 中：カテゴリ別タブ + 施術チップ、年数チップ
+/// - 上：カテゴリTab → 直下に施術チップ
+/// - 中：顔画像（ダミー or 渡された画像）→ 年数チップ
 /// - 下：説明 + Go→Python API結果表示
 class TreatmentSimulationPage extends StatefulWidget {
   final String? imagePath;
@@ -247,7 +247,7 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
       if (_tabController.indexIsChanging) return;
       setState(() {
         _selectedCategoryIndex = _tabController.index;
-        _selectedOption = null; // カテゴリ切替時はデフォルト（先頭）に戻す
+        _selectedOption = null; // カテゴリ切替時は先頭に戻す
       });
     });
   }
@@ -261,8 +261,7 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
   _TreatmentOption _currentOption() {
     final cat = _categories[_selectedCategoryIndex];
     final list = _optionsByCategory[cat]!;
-    return _selectedOption ?? list.first;
-    // ※ firstが存在する前提（定義済み）
+    return _selectedOption ?? list.first; // 定義済み前提
   }
 
   Future<void> _callTreatmentSimulation() async {
@@ -338,6 +337,16 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ★ TabBar直下にカテゴリ内の施術チップを配置
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                child: _CategoryChips(
+                  options: _optionsByCategory[_categories[_selectedCategoryIndex]]!,
+                  selected: _selectedOption ?? selected,
+                  onSelected: (opt) => setState(() => _selectedOption = opt),
+                ),
+              ),
+
               // 上部：顔画像＋「術後イメージ」オーバーレイ
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -392,19 +401,7 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
                 ),
               ),
 
-              // カテゴリ内の施術チップ（TabBarView風に差し替え）
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _CategoryChips(
-                  options: _optionsByCategory[_categories[_selectedCategoryIndex]]!,
-                  selected: _selectedOption,
-                  onSelected: (opt) => setState(() => _selectedOption = opt),
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // 何年後を見るかのチップ
+              // 年数チップ
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -429,7 +426,7 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
 
               const SizedBox(height: 12),
 
-              // 下部：詳細説明＆カウンセリング向けコメント + API結果
+              // 下部：詳細 + API結果
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
@@ -449,6 +446,7 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // タイトル（例：現在の 2点留め）
                     Text(
                       '$yearsLabelの${selected.name}',
                       style: const TextStyle(
@@ -457,17 +455,21 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
                       ),
                     ),
                     const SizedBox(height: 4),
+                    // タグ
                     Text(
                       selected.tag,
                       style: TextStyle(fontSize: 12, color: scheme.secondary),
                     ),
                     const SizedBox(height: 12),
+
+                    // 説明
                     const Text(
                       '期待できる変化',
                       style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
                     Text(selected.effect, style: const TextStyle(fontSize: 13)),
+
                     const SizedBox(height: 12),
                     const Text(
                       '加齢による見た目の変化イメージ',
@@ -480,6 +482,7 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
                           : '$years年後を想定した肌のハリ・輪郭の変化を加味した上での、施術後イメージです。（※実際の経過には個人差があります）',
                       style: const TextStyle(fontSize: 13),
                     ),
+
                     const SizedBox(height: 12),
                     const Text(
                       'カウンセリング時の伝え方ヒント',
@@ -497,7 +500,9 @@ class _TreatmentSimulationPageState extends State<TreatmentSimulationPage>
                         onPressed: _isLoading ? null : _callTreatmentSimulation,
                         icon: _isLoading
                             ? const SizedBox(
-                                width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2),
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(strokeWidth: 2),
                               )
                             : const Icon(Icons.auto_awesome),
                         label: Text(_isLoading ? 'AIシミュレーション中…' : 'AIシミュレーションを実行（Go → Python）'),
