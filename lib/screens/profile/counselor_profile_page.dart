@@ -84,7 +84,7 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
         // 今月
         conversions = [0.6, 0.68, 0.7, 0.72];
         xLabels = ['1週目', '2週目', '3週目', '4週目'];
-        chartTitle = '今月の成約率の推移（ダミー）';
+        chartTitle = '今月の成約率の推移';
 
         countLabel = '今月の成約数';
         countValue = '32件';
