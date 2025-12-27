@@ -107,7 +107,8 @@ class PatientDetailPage extends StatelessWidget {
             ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                _SectionTitle('来院履歴（ダミー）'),
+                // ダミー
+                _SectionTitle('来院履歴'),
                 const SizedBox(height: 8),
                 _VisitTile(
                   date: lastVisit,
