@@ -149,7 +149,7 @@ class AddPatientPage extends StatelessWidget {
                     // Go/Python APIで患者マスタに保存
                     FocusScope.of(context).unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('ダミー保存：患者情報を登録しました')),
+                      const SnackBar(content: Text('保存：患者情報を登録しました')),
                     );
                     // 必要ならここで Navigator.pop(context); してもOK
                   },

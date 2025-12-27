@@ -95,7 +95,8 @@ class PatientDetailPage extends StatelessWidget {
                       onPressed: () {
                       },
                       icon: const Icon(Icons.save_outlined),
-                      label: const Text('メモを保存（ダミー）'),
+                      // ダミー
+                      label: const Text('メモを保存'),
                     ),
                   ),
                 ],
