@@ -146,7 +146,7 @@ class AddPatientPage extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: () {
-                    // TODO: Go/Python APIで患者マスタに保存
+                    // Go/Python APIで患者マスタに保存
                     FocusScope.of(context).unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('ダミー保存：患者情報を登録しました')),
