@@ -460,7 +460,7 @@ class _TodayMetricChart extends StatelessWidget {
         : '${(sales / 10000).toStringAsFixed(1)}万円';
     final String subText = isConversion
         ? '目標：70% をイメージ'
-        : '目標：50万円をイメージ（ダミー）';
+        : '目標：50万円をイメージ';
 
     return Container(
       padding: const EdgeInsets.all(12),
