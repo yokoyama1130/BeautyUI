@@ -263,7 +263,7 @@ class _KpiRow extends StatelessWidget {
           child: _KpiCard(
             label: bookingLabel,
             value: '$totalBooking件',
-            sub: 'ダミーデータ',
+            sub: 'データ',
           ),
         ),
         const SizedBox(width: 12),
