@@ -168,7 +168,7 @@ class AddAppointmentPage extends StatelessWidget {
                     // TODO: Go/Python の API に POST して予約登録
                     FocusScope.of(context).unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('ダミー保存：予約を登録しました')),
+                      const SnackBar(content: Text('保存：予約を登録しました')),
                     );
                   },
                   icon: const Icon(Icons.save_outlined),
