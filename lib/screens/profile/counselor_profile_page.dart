@@ -46,7 +46,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
         // 今日
         conversions = [0.72]; // 72%
         xLabels = ['本日'];
-        chartTitle = '今日の成約率（ダミー）';
+        // ダミー
+        chartTitle = '今日の成約率';
 
         countLabel = '今日の成約数';
         countValue = '5件';
@@ -65,7 +66,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
         // 直近1週間
         conversions = [0.62, 0.7, 0.68, 0.75, 0.65, 0.7, 0.66];
         xLabels = ['月', '火', '水', '木', '金', '土', '日'];
-        chartTitle = '直近1週間の成約率の推移（ダミー）';
+        // ダミー
+        chartTitle = '直近1週間の成約率の推移';
 
         countLabel = '今週の成約数';
         countValue = '18件';
@@ -187,7 +189,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'カウンセラー別 実績サマリー（ダミー）',
+                // ダミー
+                'カウンセラー別 実績サマリー',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -216,7 +219,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
                 child: _MiniKpiCard(
                   label: countLabel,
                   value: countValue,
-                  sub: 'ダミーデータ',
+                  // ダミー
+                  sub: 'データ',
                 ),
               ),
               const SizedBox(width: 12),
@@ -236,7 +240,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
                 child: _MiniKpiCard(
                   label: salesLabel,
                   value: salesValue,
-                  sub: '術式ベースの概算（ダミー）',
+                  // ダミー
+                  sub: '術式ベースの概算',
                 ),
               ),
               const SizedBox(width: 12),
@@ -244,7 +249,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
                 child: _MiniKpiCard(
                   label: patientLabel,
                   value: patientValue,
-                  sub: 'カウンセリング済み（ダミー）',
+                  // ダミー
+                  sub: 'カウンセリング済み',
                 ),
               ),
             ],
@@ -274,7 +280,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
           SwitchListTile(
             title: const Text('このカウンセラーに紐づくデータだけダッシュボードに表示'),
             subtitle: const Text(
-              'オンにするとホーム画面の成約率・売上などを「自分担当分」に絞って表示（※今は見た目だけのダミー）。',
+              // ダミー
+              'オンにするとホーム画面の成約率・売上などを「自分担当分」に絞って表示',
               style: TextStyle(fontSize: 11),
             ),
             value: _filterDashboardByThisCounselor,
@@ -304,7 +311,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.lock_person_outlined),
-            title: const Text('パスワード・ログイン情報（ダミー）'),
+            // ダミー
+            title: const Text('パスワード・ログイン情報'),
             subtitle: const Text(
               '本番運用時はここからパスワード変更や2段階認証を設定。',
               style: TextStyle(fontSize: 11),
@@ -318,7 +326,8 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
             contentPadding: EdgeInsets.zero,
             leading: Icon(Icons.logout, color: scheme.error),
             title: Text(
-              'ログアウト（ダミー）',
+              // ダミー
+              'ログアウト',
               style: TextStyle(color: scheme.error),
             ),
             onTap: () {
@@ -525,7 +534,7 @@ class _CounselorTrendChart extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         const Text(
-          '※ 成約率は全てダミーデータ。後でGo/PythonのAPIと連携して実データを表示予定。',
+          '※ 後でGo/PythonのAPIと連携して実データを表示予定。',
           style: TextStyle(fontSize: 11, color: Colors.grey),
         ),
       ],
