@@ -425,8 +425,8 @@ class _MetricChart extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           isConversion
-              ? '※ $xLabelごとのダミー成約率（後でAPI連携予定）'
-              : '※ $xLabelごとのダミー売上（後でAPI連携予定）',
+              ? '※ $xLabelごとの成約率（後でAPI連携予定）'
+              : '※ $xLabelごとの売上（後でAPI連携予定）',
           style: const TextStyle(fontSize: 11, color: Colors.grey),
         ),
       ],
